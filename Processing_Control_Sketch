@@ -1,0 +1,292 @@
+import processing.serial.*;
+
+Serial port;
+
+//int count = 0;
+int countW = 0;
+int countS = 0;
+int countA = 0;
+int countD = 0;
+int countP = 0;
+int countC = 0;
+int countN = 0;
+int countB = 0;
+int countJ = 0;
+int countK = 0;
+int countH = 0;
+int countG = 0;
+
+int portnum = 13;
+
+String status = " ";
+
+
+void setup() {
+  size(600, 500);
+  textSize(18);
+  smooth();
+
+  println(Serial.list());
+  String arduinoPort = Serial.list()[portnum];
+  port = new Serial(this, arduinoPort, 115200);
+  port.write('c');
+  
+    fill(255);
+  background(240);
+  strokeWeight(1);
+  
+  rect(100, 100, 60, 60); // Forward Box
+  rect(100, 180, 60, 60); // Backward
+  rect(20, 180, 60, 60); // Left
+  rect(180, 180, 60, 60); // Right
+  
+  rect(300, 100, 275, 30);   //status button
+  rect(300, 180, 275, 30);   //serial port button
+  
+  //ping button
+  rect(20, 320, 80, 60);
+  //relay button
+  rect(140, 320, 80, 60);
+  //Servo left button
+  rect(260, 320, 80, 60);
+  //servo right button
+  rect(380, 320, 80, 60);
+  //clear mouse button
+  rect(20, 420, 80, 60);
+  //Mouse data button
+  rect(140, 420, 80, 60);
+  //Heading button
+  rect(260, 420, 80, 60);
+  //Gas sensor button
+  rect(380, 420, 80, 60);
+  
+  
+   fill(0);
+  //text filled with black
+  textSize(36);
+  text("Manual Grunt Controls", 90, 40);
+  textSize(18);
+  text("Movement Controls", 20, 75);
+  text("Status", 300, 75);
+  text(status, 310, 125);
+  text("Serial Port", 300, 165);
+  text(Serial.list()[portnum], 310, 205);
+  text("Function Controls", 20, 300);
+
+  text("Ping", 30, 370);
+  text("Relay", 150, 370);
+  text("Servo", 270, 350);
+  text("Left", 270, 370);
+  text("Servo", 390, 350);
+  text("Right", 390, 370);
+
+  text("Clear", 30, 450);
+  text("Mouse", 30, 470);
+  text("Mouse", 150, 450);
+  text("Data", 150, 470);
+  text("Heading", 270, 470);
+  text("Gas", 390, 450);
+  text("Sensor", 390, 470);
+
+
+
+  //forward arrow
+  strokeWeight(5);
+  line(130, 110, 130, 150);
+  line(130, 110, 140, 120);
+  line(130, 110, 120, 120);
+  //backward arrow
+  line(130, 190, 130, 230);
+  line(130, 230, 140, 220);
+  line(130, 230, 120, 220);
+  //left arrow
+  line(30, 210, 70, 210);
+  line(30, 210, 40, 200);
+  line(30, 210, 40, 220);
+  //right arrow
+  line(190, 210, 230, 210);
+  line(230, 210, 220, 200);
+  line(230, 210, 220, 220);
+  
+}
+
+void draw() {
+
+
+  //dirctional buttons filled with white
+
+  //if button is clicked send one forward commmand
+  if ((mouseX > 100) && (mouseX < 160) &&
+    (mouseY > 100) && (mouseY < 160)&& mousePressed) {
+    if (countW == 0) {
+      println("Forward Command Issued");
+      port.write('w');
+      port.write('2');
+      countW = 1;
+    }
+  } 
+  else {
+    countW = 0;
+  }
+
+ 
+
+  //if button is clicked send one backward commmand
+
+  if ((mouseX > 100) && (mouseX < 160) &&
+    (mouseY > 180) && (mouseY < 240)&& mousePressed) {
+
+    if (countS == 0) {
+      println("Backward Command Issued");
+      port.write('s');
+      countS = 1;
+    }
+  } 
+  else {
+    countS = 0;
+  }
+
+
+
+  //if button is clicked send one forward commmand
+  if ((mouseX > 20) && (mouseX < 80) &&
+    (mouseY > 180) && (mouseY < 240)&& mousePressed) {
+    if (countA == 0) {
+      println("Turn Left Command Issued");
+      port.write('a');
+      port.write('2');
+      countA = 1;
+    }
+  } 
+  else {
+    countA = 0;
+  }
+
+
+  //if button is clicked send one forward commmand
+  if ((mouseX > 180) && (mouseX < 240) &&
+    (mouseY > 180) && (mouseY < 240)&& mousePressed) {
+    if (countD == 0) {
+      println("Turn Right Command Issued");
+      port.write('d');
+      port.write('2');
+      countD = 1;
+    }
+  } 
+  else {
+    countD = 0;
+  }
+
+
+  if ((mouseX > 20) && (mouseX < 100) &&
+    (mouseY > 320) && (mouseY < 380)&& mousePressed) {
+    if (countP == 0) {
+      port.clear();
+      println("Ping Sonar Command Issued");
+      port.write('m');
+      countP = 1;
+      delay(100);
+      status = port.readStringUntil('\n');
+    }
+  } 
+  else {
+    countP = 0;
+  }
+
+  if ((mouseX > 140) && (mouseX < 220) &&
+    (mouseY > 320) && (mouseY < 380)&& mousePressed) {
+    if (countC == 0) {
+      println("Ultrasonic Range Finder Reset Issued");
+      port.write('c');
+      countC = 1;
+    }
+  } 
+  else {
+    countC = 0;
+  }
+
+
+  if ((mouseX > 260) && (mouseX < 340) &&
+    (mouseY > 320) && (mouseY < 380)&& mousePressed) {
+    if (countJ == 0) {
+      println("Servo Left Command Issued");
+      port.write('j');
+      countJ = 1;
+    }
+  } 
+  else {
+    countJ = 0;
+  }
+
+  if ((mouseX > 380) && (mouseX < 460) &&
+    (mouseY > 320) && (mouseY < 380)&& mousePressed) {
+    if (countK == 0) {
+      println("Servo Right Command Issued");
+      port.write('k');
+      countK = 1;
+    }
+  } 
+  else {
+    countK = 0;
+  }
+
+  if ((mouseX > 20) && (mouseX < 100) &&
+    (mouseY > 420) && (mouseY < 480)&& mousePressed) {
+    if (countB == 0) {
+      println("Mouse Data Reset Issused");
+      port.write('b');
+      countB = 1;
+    }
+  } 
+  else {
+    countB = 0;
+  }
+
+  if ((mouseX > 140) && (mouseX < 220) &&
+    (mouseY > 420) && (mouseY < 480)&& mousePressed) {
+    if (countN == 0) {
+      port.clear();
+      println("Mouse Data Request Issused");
+      port.write('n');
+      countN = 1;
+      delay(100);
+      status = port.readStringUntil('\n');
+    }
+  } 
+  else {
+    countN = 0;
+  }
+
+  if ((mouseX > 260) && (mouseX < 340) &&
+    (mouseY > 420) && (mouseY < 480)&& mousePressed) {
+    if (countH == 0) {
+      port.clear();
+      println("Heading Command Issused");
+      port.write('h');
+      countH = 1;
+      delay(100);
+      status = port.readStringUntil('\n');
+    }
+  } 
+  else {
+    countH = 0;
+  }
+
+  if ((mouseX > 380) && (mouseX < 440) &&
+    (mouseY > 420) && (mouseY < 480)&& mousePressed) {
+    if (countG == 0) {
+      port.clear();
+      println("Gas Sensor Reading Issued");
+      port.write('g');
+      countG = 1;
+      delay(100);
+      status = port.readStringUntil('\n');
+    }
+  } 
+  else {
+    countG = 0;
+  }
+
+
+ 
+}
